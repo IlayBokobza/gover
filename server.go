@@ -7,8 +7,8 @@ import (
 
 type RequestHandler func(w http.ResponseWriter, req *http.Request)
 
-func Endpoint(path string) crud {
-	return crud{path: path}
+func Endpoint(path string) endpoint {
+	return endpoint{path: path}
 }
 
 func Listen(port int) {

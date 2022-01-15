@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-type RequestHandler func(w http.ResponseWriter, req *http.Request)
+type RequestHandler func(w http.ResponseWriter, req *http.Request, md map[string]string)
 
 func Endpoint(path string) endpoint {
 	return endpoint{path: path}

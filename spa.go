@@ -28,13 +28,10 @@ For example:
 A smaller limit is better for performance.
 */
 func HostSPA(folder string, limit int) {
-	count := 0
 	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
 		fileReg, _ := regexp.Compile(`([a-z]+\.[a-z]+)$`)
 		requestingFile := fileReg.MatchString(req.URL.Path)
 		deepUrl := strings.Count(req.URL.Path, "/") > 2
-		fmt.Println(count)
-		count++
 
 		//if requesting a file on the /
 		if req.URL.Path == "/" || (requestingFile && !deepUrl) {

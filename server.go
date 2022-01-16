@@ -27,11 +27,21 @@ var x interface{} = 5
 
 y := x.(int)
 */
-func DynamicJsonBodyParser(body io.ReadCloser) map[string]interface{} {
+func DynamicJSONBodyParser(body io.ReadCloser) (map[string]interface{}, error) {
 	var out map[string]interface{}
-	data, _ := ioutil.ReadAll(body)
-	json.Unmarshal(data, &out)
-	return out
+	data, err := ioutil.ReadAll(body)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(data, &out)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return out, nil
 }
 
 //Starts the server on a port

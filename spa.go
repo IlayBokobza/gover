@@ -10,6 +10,23 @@ import (
 	"strings"
 )
 
+/*
+Hosts a signal page application
+
+The folder parameter is the folder which the SPA app is located.
+
+The limit variable is how deep do you allow the URLs to go.
+
+For example:
+
+"/static/js/temp/" is a length of 3, because is goes 3 folders deep.
+
+"/static/js/temp/old" is a length of 4, because is goes 4 folders deep.
+
+"/static/js/temp/old/index.js" is still a length of 4, because the file at the end doesn't count.
+
+A smaller limit is better for performance.
+*/
 func HostSPA(folder string, limit int) {
 	count := 0
 	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {

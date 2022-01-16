@@ -49,9 +49,14 @@ func HostSPA(folder string, limit int) {
 				data, err := ioutil.ReadFile(filepath)
 
 				if err != nil {
-					w.WriteHeader(http.StatusInternalServerError)
-					log.Fatal(err)
-					return
+					if os.IsNotExist(err) {
+						w.WriteHeader(http.StatusNotFound)
+						w.Write([]byte("404 - file not found"))
+					} else {
+						w.WriteHeader(http.StatusInternalServerError)
+						log.Fatal(err)
+						return
+					}
 				}
 
 				w.Write(data)
@@ -66,7 +71,7 @@ func HostSPA(folder string, limit int) {
 
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				log.Fatal(err)
+				log.Fatal(err, "\n Cannot find/read index.html")
 				return
 			}
 

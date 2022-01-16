@@ -7,12 +7,15 @@ import (
 // This is how a middleware should look.
 // If returns false then middleware didn not pass
 // If returns true then it did pass
-type MiddlewareFunc func(w http.ResponseWriter, req *http.Request, md *map[string]string) bool
+type MiddlewareFunc func(w http.ResponseWriter, req *http.Request, md *MiddlewareData) bool
+
+//The data the middlware can pass
+type MiddlewareData map[string]string
 
 type routeData struct {
 	handler        RequestHandler
 	middleware     MiddlewareFunc
-	middlewareData map[string]string
+	middlewareData MiddlewareData
 }
 
 func (r *routeData) Middleware(m MiddlewareFunc) {

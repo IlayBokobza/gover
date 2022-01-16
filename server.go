@@ -1,7 +1,11 @@
 package gover
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
+	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -11,7 +15,14 @@ func Endpoint(path string) endpoint {
 	return endpoint{path: path}
 }
 
+func DynamicJsonBodyParser(body io.ReadCloser) map[string]interface{} {
+	var out map[string]interface{}
+	data, _ := ioutil.ReadAll(body)
+	json.Unmarshal(data, &out)
+	return out
+}
+
 func Listen(port int) {
 	fmt.Printf("Server listening on port %v\n", port)
-	http.ListenAndServe(fmt.Sprintf(":%v", port), nil)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", port), nil))
 }

@@ -86,14 +86,14 @@ Doing what we did so far will not actually work. All it does is store all that i
 
 Example:
 ```go
-	ep := gover.Endpoint("/api")
+ep := gover.Endpoint("/api")
 
-	//handling a get method on /api
-	ep.Get(func(w http.ResponseWriter, req *http.Request, md map[string]string) {
-		w.Write([]byte("You used a GET method"))
-	})
+//handling a get method on /api
+ep.Get(func(w http.ResponseWriter, req *http.Request, md map[string]string) {
+	w.Write([]byte("You used a GET method"))
+})
 
-	ep.Create()
+ep.Create()
 ``` 
 ## Hosting
 ### Normal storage bin hosting

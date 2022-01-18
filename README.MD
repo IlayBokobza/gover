@@ -14,12 +14,12 @@ Example:
 ep := gover.Endpoint("/api")
 
 //handling a GET method on /api
-ep.Get(func(w http.ResponseWriter, req *http.Request, md map[string]string) {
+ep.Get(func(w http.ResponseWriter, r *http.Request, md map[string]string) {
 	w.Write([]byte("You used a GET method"))
 })
 
 //handling a POST method on /api
-ep.Post(func(w http.ResponseWriter, req *http.Request, md map[string]string) {
+ep.Post(func(w http.ResponseWriter, r *http.Request, md map[string]string) {
 	w.Write([]byte("You used a POST method"))
 })
 ```
@@ -35,10 +35,10 @@ ep := gover.Endpoint("/api")
 
 //handling a get method on /api with a middlware
 ep.
-	Get(func(w http.ResponseWriter, req *http.Request, md map[string]string) {
+	Get(func(w http.ResponseWriter, r *http.Request, md map[string]string) {
 		w.Write([]byte("You used a GET method"))
 	}).
-	Middleware(func(w http.ResponseWriter, req *http.Request, md *gover.MiddlewareData) bool {
+	Middleware(func(w http.ResponseWriter, r *http.Request, md *gover.MiddlewareData) bool {
 		//this middlware passes
 		w.Write([]byte("This requests was not stopped by the middleware \n"))
 
@@ -47,10 +47,10 @@ ep.
 
 //handling a get method on /api with a middlware
 ep.
-	Post(func(w http.ResponseWriter, req *http.Request, md map[string]string) {
+	Post(func(w http.ResponseWriter, r *http.Request, md map[string]string) {
 		w.Write([]byte("You used a POST method"))
 	}).
-	Middleware(func(w http.ResponseWriter, req *http.Request, md *gover.MiddlewareData) bool {
+	Middleware(func(w http.ResponseWriter, r *http.Request, md *gover.MiddlewareData) bool {
 		//this middleware fails
 		w.Write([]byte("This requests was stopped by the middleware"))
 
@@ -67,13 +67,13 @@ ep := gover.Endpoint("/api")
 
 //handling a get method on /api
 ep.
-	Get(func(w http.ResponseWriter, req *http.Request, md map[string]string) {
+	Get(func(w http.ResponseWriter, r *http.Request, md map[string]string) {
 		n := md["name"]
 		ln := md["last-name"]
 
 		fmt.Println(n, ln)
 	}).
-	Middleware(func(w http.ResponseWriter, req *http.Request, md *gover.MiddlewareData) bool {
+	Middleware(func(w http.ResponseWriter, r *http.Request, md *gover.MiddlewareData) bool {
 		//passing data
 		(*md)["name"] = "ilay"
 		(*md)["last-name"] = "bokobza"
@@ -89,7 +89,7 @@ Example:
 ep := gover.Endpoint("/api")
 
 //handling a get method on /api
-ep.Get(func(w http.ResponseWriter, req *http.Request, md map[string]string) {
+ep.Get(func(w http.ResponseWriter, r *http.Request, md map[string]string) {
 	w.Write([]byte("You used a GET method"))
 })
 
@@ -139,8 +139,8 @@ Example:
 ep := gover.Endpoint("/api")
 
 //handling a get method on /api
-ep.Get(func(w http.ResponseWriter, req *http.Request, md map[string]string) {
-	bodyData, err := gover.DynamicJSONBodyParser(req.Body)
+ep.Get(func(w http.ResponseWriter, r *http.Request, md map[string]string) {
+	bodyData, err := gover.DynamicJSONBodyParser(r.Body)
 
 	if err != nil {
 		log.Println(err)
@@ -159,4 +159,35 @@ Example:
 ```go
 port := 3000
 gover.Listen(port)
+```
+
+### Getting files from request
+Gover has an useful method that allows you to get the file from the request very easily.The `GetFile` method revives two arguments. The first one is the `fieldname`, and the second one is the request.
+The `fieldname` is name property of the file input in your HTML form.
+
+For Example: This is your HTML form
+```html
+<form>
+  <input type="file" name="myFile" />
+  <button>Submit</button>
+</form>
+```
+you will need to pass to the `"myFile"` to the `fieldname` parameter.
+
+Code Example:
+```go
+ep := gover.Endpoint("/upload")
+
+ep.Post(func(w http.ResponseWriter, r *http.Request, md map[string]string) {
+	data, handler, err := gover.GetFile("myFile", r)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	ioutil.WriteFile(handler.Filename, data, 0666)
+})
+
+ep.Create()
 ```

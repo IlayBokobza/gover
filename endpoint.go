@@ -10,7 +10,7 @@ This is how a middleware should look.
 If returns false then middleware didn not pass
 If returns true then it did pass
 */
-type MiddlewareFunc func(w http.ResponseWriter, req *http.Request, md *MiddlewareData) bool
+type MiddlewareFunc func(w http.ResponseWriter, r *http.Request, md *MiddlewareData) bool
 
 //The data the middlware can pass
 type MiddlewareData map[string]string
@@ -47,12 +47,12 @@ type endpoint struct {
 
 //Creates the endpoint
 func (c endpoint) Create() {
-	http.HandleFunc(c.path, func(w http.ResponseWriter, req *http.Request) {
-		switch req.Method {
+	http.HandleFunc(c.path, func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
 		case "GET":
 			if c.get.handler != nil {
-				if c.get.middleware == nil || c.get.middleware(w, req, &c.get.middlewareData) {
-					c.get.handler(w, req, c.get.middlewareData)
+				if c.get.middleware == nil || c.get.middleware(w, r, &c.get.middlewareData) {
+					c.get.handler(w, r, c.get.middlewareData)
 				}
 			} else {
 				w.WriteHeader(http.StatusNotFound)
@@ -60,8 +60,8 @@ func (c endpoint) Create() {
 			}
 		case "POST":
 			if c.post.handler != nil {
-				if c.post.middleware == nil || c.post.middleware(w, req, &c.post.middlewareData) {
-					c.post.handler(w, req, c.post.middlewareData)
+				if c.post.middleware == nil || c.post.middleware(w, r, &c.post.middlewareData) {
+					c.post.handler(w, r, c.post.middlewareData)
 				}
 			} else {
 				w.WriteHeader(http.StatusNotFound)
@@ -69,8 +69,8 @@ func (c endpoint) Create() {
 			}
 		case "PUT":
 			if c.put.handler != nil {
-				if c.put.middleware == nil || c.put.middleware(w, req, &c.put.middlewareData) {
-					c.put.handler(w, req, c.put.middlewareData)
+				if c.put.middleware == nil || c.put.middleware(w, r, &c.put.middlewareData) {
+					c.put.handler(w, r, c.put.middlewareData)
 				}
 			} else {
 				w.WriteHeader(http.StatusNotFound)
@@ -78,8 +78,8 @@ func (c endpoint) Create() {
 			}
 		case "PATCH":
 			if c.patch.handler != nil {
-				if c.patch.middleware == nil || c.patch.middleware(w, req, &c.patch.middlewareData) {
-					c.patch.handler(w, req, c.patch.middlewareData)
+				if c.patch.middleware == nil || c.patch.middleware(w, r, &c.patch.middlewareData) {
+					c.patch.handler(w, r, c.patch.middlewareData)
 				}
 			} else {
 				w.WriteHeader(http.StatusNotFound)
@@ -87,8 +87,8 @@ func (c endpoint) Create() {
 			}
 		case "DELETE":
 			if c.delete.handler != nil {
-				if c.delete.middleware == nil || c.delete.middleware(w, req, &c.delete.middlewareData) {
-					c.delete.handler(w, req, c.delete.middlewareData)
+				if c.delete.middleware == nil || c.delete.middleware(w, r, &c.delete.middlewareData) {
+					c.delete.handler(w, r, c.delete.middlewareData)
 				}
 			} else {
 				w.WriteHeader(http.StatusNotFound)
@@ -96,8 +96,8 @@ func (c endpoint) Create() {
 			}
 		case "COPY":
 			if c.copy.handler != nil {
-				if c.copy.middleware == nil || c.copy.middleware(w, req, &c.copy.middlewareData) {
-					c.copy.handler(w, req, c.copy.middlewareData)
+				if c.copy.middleware == nil || c.copy.middleware(w, r, &c.copy.middlewareData) {
+					c.copy.handler(w, r, c.copy.middlewareData)
 				}
 			} else {
 				w.WriteHeader(http.StatusNotFound)
@@ -105,8 +105,8 @@ func (c endpoint) Create() {
 			}
 		case "HEAD":
 			if c.head.handler != nil {
-				if c.head.middleware == nil || c.head.middleware(w, req, &c.head.middlewareData) {
-					c.head.handler(w, req, c.head.middlewareData)
+				if c.head.middleware == nil || c.head.middleware(w, r, &c.head.middlewareData) {
+					c.head.handler(w, r, c.head.middlewareData)
 				}
 			} else {
 				w.WriteHeader(http.StatusNotFound)
@@ -114,8 +114,8 @@ func (c endpoint) Create() {
 			}
 		case "OPTIONS":
 			if c.options.handler != nil {
-				if c.options.middleware == nil || c.options.middleware(w, req, &c.options.middlewareData) {
-					c.options.handler(w, req, c.options.middlewareData)
+				if c.options.middleware == nil || c.options.middleware(w, r, &c.options.middlewareData) {
+					c.options.handler(w, r, c.options.middlewareData)
 				}
 			} else {
 				w.WriteHeader(http.StatusNotFound)
@@ -123,8 +123,8 @@ func (c endpoint) Create() {
 			}
 		case "LINK":
 			if c.link.handler != nil {
-				if c.link.middleware == nil || c.link.middleware(w, req, &c.link.middlewareData) {
-					c.link.handler(w, req, c.link.middlewareData)
+				if c.link.middleware == nil || c.link.middleware(w, r, &c.link.middlewareData) {
+					c.link.handler(w, r, c.link.middlewareData)
 				}
 			} else {
 				w.WriteHeader(http.StatusNotFound)
@@ -132,8 +132,8 @@ func (c endpoint) Create() {
 			}
 		case "UNLINK":
 			if c.unlink.handler != nil {
-				if c.unlink.middleware == nil || c.unlink.middleware(w, req, &c.unlink.middlewareData) {
-					c.unlink.handler(w, req, c.unlink.middlewareData)
+				if c.unlink.middleware == nil || c.unlink.middleware(w, r, &c.unlink.middlewareData) {
+					c.unlink.handler(w, r, c.unlink.middlewareData)
 				}
 			} else {
 				w.WriteHeader(http.StatusNotFound)
@@ -141,8 +141,8 @@ func (c endpoint) Create() {
 			}
 		case "PURGE":
 			if c.purge.handler != nil {
-				if c.purge.middleware == nil || c.purge.middleware(w, req, &c.purge.middlewareData) {
-					c.purge.handler(w, req, c.purge.middlewareData)
+				if c.purge.middleware == nil || c.purge.middleware(w, r, &c.purge.middlewareData) {
+					c.purge.handler(w, r, c.purge.middlewareData)
 				}
 			} else {
 				w.WriteHeader(http.StatusNotFound)
@@ -150,8 +150,8 @@ func (c endpoint) Create() {
 			}
 		case "LOCK":
 			if c.lock.handler != nil {
-				if c.lock.middleware == nil || c.lock.middleware(w, req, &c.lock.middlewareData) {
-					c.lock.handler(w, req, c.lock.middlewareData)
+				if c.lock.middleware == nil || c.lock.middleware(w, r, &c.lock.middlewareData) {
+					c.lock.handler(w, r, c.lock.middlewareData)
 				}
 			} else {
 				w.WriteHeader(http.StatusNotFound)
@@ -159,8 +159,8 @@ func (c endpoint) Create() {
 			}
 		case "UNLOCK":
 			if c.unlock.handler != nil {
-				if c.unlock.middleware == nil || c.unlock.middleware(w, req, &c.unlock.middlewareData) {
-					c.unlock.handler(w, req, c.unlock.middlewareData)
+				if c.unlock.middleware == nil || c.unlock.middleware(w, r, &c.unlock.middlewareData) {
+					c.unlock.handler(w, r, c.unlock.middlewareData)
 				}
 			} else {
 				w.WriteHeader(http.StatusNotFound)
@@ -168,8 +168,8 @@ func (c endpoint) Create() {
 			}
 		case "PROPFIND":
 			if c.propfind.handler != nil {
-				if c.propfind.middleware == nil || c.propfind.middleware(w, req, &c.propfind.middlewareData) {
-					c.propfind.handler(w, req, c.propfind.middlewareData)
+				if c.propfind.middleware == nil || c.propfind.middleware(w, r, &c.propfind.middlewareData) {
+					c.propfind.handler(w, r, c.propfind.middlewareData)
 				}
 			} else {
 				w.WriteHeader(http.StatusNotFound)
@@ -177,8 +177,8 @@ func (c endpoint) Create() {
 			}
 		case "VIEW":
 			if c.view.handler != nil {
-				if c.view.middleware == nil || c.view.middleware(w, req, &c.view.middlewareData) {
-					c.view.handler(w, req, c.view.middlewareData)
+				if c.view.middleware == nil || c.view.middleware(w, r, &c.view.middlewareData) {
+					c.view.handler(w, r, c.view.middlewareData)
 				}
 			} else {
 				w.WriteHeader(http.StatusNotFound)

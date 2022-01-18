@@ -28,23 +28,23 @@ For example:
 A smaller limit is better for performance.
 */
 func HostSPA(folder string, limit int) {
-	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fileReg, _ := regexp.Compile(`([a-z]+\.[a-z]+)$`)
-		requestingFile := fileReg.MatchString(req.URL.Path)
-		deepUrl := strings.Count(req.URL.Path, "/") > 2
+		requestingFile := fileReg.MatchString(r.URL.Path)
+		deepUrl := strings.Count(r.URL.Path, "/") > 2
 
 		//if requesting a file on the /
-		if req.URL.Path == "/" || (requestingFile && !deepUrl) {
-			http.FileServer(http.Dir(folder)).ServeHTTP(w, req)
+		if r.URL.Path == "/" || (requestingFile && !deepUrl) {
+			http.FileServer(http.Dir(folder)).ServeHTTP(w, r)
 
 			//if requesting a file deeper then / which is not index.html
 		} else if deepUrl && requestingFile {
-			url := fileReg.ReplaceAllString(req.URL.Path, "")
+			url := fileReg.ReplaceAllString(r.URL.Path, "")
 			path, found := doesPathExist(folder, url, limit, 0)
 
 			if found {
-				r, _ := regexp.Compile(`([a-z]+\.[a-z]+)$`)
-				filename := r.FindString(req.URL.Path)
+				reg, _ := regexp.Compile(`([a-z]+\.[a-z]+)$`)
+				filename := reg.FindString(r.URL.Path)
 				filepath := folder + "/" + path + filename
 				data, err := ioutil.ReadFile(filepath)
 

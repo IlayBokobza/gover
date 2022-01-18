@@ -6,10 +6,11 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"mime/multipart"
 	"net/http"
 )
 
-type RequestHandler func(w http.ResponseWriter, req *http.Request, md map[string]string)
+type RequestHandler func(w http.ResponseWriter, r *http.Request, md map[string]string)
 
 // Creates an endpoint instance
 func Endpoint(path string) endpoint {
@@ -53,4 +54,33 @@ func Listen(port int) {
 //Hosts a normal file bin
 func HostFolder(path string) {
 	http.Handle("/", http.FileServer(http.Dir(path)))
+}
+
+/*
+Gets the file from the request.
+
+The fieldname argument is the name of the input field in your HTML.
+
+For Example: Your HTML input is this:
+
+<input type="file" name="myFile">
+
+In this case you will need to pass to the function "myFile".
+*/
+func GetFile(fieldname string, r *http.Request) ([]byte, *multipart.FileHeader, error) {
+	r.ParseMultipartForm(10 << 20)
+
+	file, handler, err := r.FormFile(fieldname)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer file.Close()
+
+	data, err := ioutil.ReadAll(file)
+
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return data, handler, nil
 }

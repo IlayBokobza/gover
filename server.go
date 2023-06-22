@@ -45,13 +45,13 @@ func DynamicJSONBodyParser(body io.ReadCloser) (map[string]interface{}, error) {
 	return out, nil
 }
 
-//Starts the server on a port
+// Starts the server on a port
 func Listen(port int) {
 	fmt.Printf("Server listening on port %v\n", port)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", port), nil))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf("127.0.0.1:%v", port), nil))
 }
 
-//Hosts a normal file bin
+// Hosts a normal file bin
 func HostFolder(path string) {
 	http.Handle("/", http.FileServer(http.Dir(path)))
 }

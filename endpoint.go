@@ -12,8 +12,8 @@ If returns true then it did pass
 */
 type MiddlewareFunc func(w http.ResponseWriter, r *http.Request, md *MiddlewareData) bool
 
-//The data the middlware can pass
-type MiddlewareData map[string]string
+// The data the middlware can pass
+type MiddlewareData map[string]interface{}
 
 type routeData struct {
 	handler        RequestHandler
@@ -21,7 +21,7 @@ type routeData struct {
 	middlewareData MiddlewareData
 }
 
-//Sets the middleware for the route
+// Sets the middleware for the route
 func (r *routeData) Middleware(m MiddlewareFunc) {
 	r.middleware = m
 }
@@ -45,7 +45,7 @@ type endpoint struct {
 	view     routeData
 }
 
-//Creates the endpoint
+// Creates the endpoint
 func (c endpoint) Create() {
 	http.HandleFunc(c.path, func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
@@ -191,107 +191,107 @@ func (c endpoint) Create() {
 	})
 }
 
-//Sets the GET method for this endpoint
+// Sets the GET method for this endpoint
 func (c *endpoint) Get(f RequestHandler) *routeData {
 	c.get.handler = f
-	c.get.middlewareData = make(map[string]string)
+	c.get.middlewareData = make(map[string]interface{})
 	return &c.get
 }
 
-//Sets the POST method for this endpoint
+// Sets the POST method for this endpoint
 func (c *endpoint) Post(f RequestHandler) *routeData {
 	c.post.handler = f
-	c.post.middlewareData = make(map[string]string)
+	c.post.middlewareData = make(map[string]interface{})
 	return &c.post
 }
 
-//Sets the PUT method for this endpoint
+// Sets the PUT method for this endpoint
 func (c *endpoint) Put(f RequestHandler) *routeData {
 	c.put.handler = f
-	c.put.middlewareData = make(map[string]string)
+	c.put.middlewareData = make(map[string]interface{})
 	return &c.put
 }
 
-//Sets the PATCH method for this endpoint
+// Sets the PATCH method for this endpoint
 func (c *endpoint) Patch(f RequestHandler) *routeData {
 	c.patch.handler = f
-	c.patch.middlewareData = make(map[string]string)
+	c.patch.middlewareData = make(map[string]interface{})
 	return &c.patch
 }
 
-//Sets the DELETE method for this endpoint
+// Sets the DELETE method for this endpoint
 func (c *endpoint) Delete(f RequestHandler) *routeData {
 	c.delete.handler = f
-	c.delete.middlewareData = make(map[string]string)
+	c.delete.middlewareData = make(map[string]interface{})
 	return &c.delete
 }
 
-//Sets the COPY method for this endpoint
+// Sets the COPY method for this endpoint
 func (c *endpoint) Copy(f RequestHandler) *routeData {
 	c.copy.handler = f
-	c.copy.middlewareData = make(map[string]string)
+	c.copy.middlewareData = make(map[string]interface{})
 	return &c.copy
 }
 
-//Sets the HEAD method for this endpoint
+// Sets the HEAD method for this endpoint
 func (c *endpoint) Head(f RequestHandler) *routeData {
 	c.head.handler = f
-	c.head.middlewareData = make(map[string]string)
+	c.head.middlewareData = make(map[string]interface{})
 	return &c.head
 }
 
-//Sets the OPTIONS method for this endpoint
+// Sets the OPTIONS method for this endpoint
 func (c *endpoint) Options(f RequestHandler) *routeData {
 	c.options.handler = f
-	c.options.middlewareData = make(map[string]string)
+	c.options.middlewareData = make(map[string]interface{})
 	return &c.options
 }
 
-//Sets the LINK method for this endpoint
+// Sets the LINK method for this endpoint
 func (c *endpoint) Link(f RequestHandler) *routeData {
 	c.link.handler = f
-	c.link.middlewareData = make(map[string]string)
+	c.link.middlewareData = make(map[string]interface{})
 	return &c.link
 }
 
-//Sets the UNLINK method for this endpoint
+// Sets the UNLINK method for this endpoint
 func (c *endpoint) Unlink(f RequestHandler) *routeData {
 	c.unlink.handler = f
-	c.unlink.middlewareData = make(map[string]string)
+	c.unlink.middlewareData = make(map[string]interface{})
 	return &c.unlink
 }
 
-//Sets the PURGE method for this endpoint
+// Sets the PURGE method for this endpoint
 func (c *endpoint) Purge(f RequestHandler) *routeData {
 	c.purge.handler = f
-	c.purge.middlewareData = make(map[string]string)
+	c.purge.middlewareData = make(map[string]interface{})
 	return &c.purge
 }
 
-//Sets the LOCK method for this endpoint
+// Sets the LOCK method for this endpoint
 func (c *endpoint) Lock(f RequestHandler) *routeData {
 	c.lock.handler = f
-	c.lock.middlewareData = make(map[string]string)
+	c.lock.middlewareData = make(map[string]interface{})
 	return &c.lock
 }
 
-//Sets the UNLOCK method for this endpoint
+// Sets the UNLOCK method for this endpoint
 func (c *endpoint) Unlock(f RequestHandler) *routeData {
 	c.unlock.handler = f
-	c.unlock.middlewareData = make(map[string]string)
+	c.unlock.middlewareData = make(map[string]interface{})
 	return &c.unlock
 }
 
-//Sets the PROPFIND method for this endpoint
+// Sets the PROPFIND method for this endpoint
 func (c *endpoint) Propfind(f RequestHandler) *routeData {
 	c.propfind.handler = f
-	c.propfind.middlewareData = make(map[string]string)
+	c.propfind.middlewareData = make(map[string]interface{})
 	return &c.propfind
 }
 
-//Sets the VIEW method for this endpoint
+// Sets the VIEW method for this endpoint
 func (c *endpoint) View(f RequestHandler) *routeData {
 	c.view.handler = f
-	c.view.middlewareData = make(map[string]string)
+	c.view.middlewareData = make(map[string]interface{})
 	return &c.view
 }

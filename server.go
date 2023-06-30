@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-type RequestHandler func(w http.ResponseWriter, r *http.Request, md map[string]string)
+type RequestHandler func(w http.ResponseWriter, r *http.Request, md map[string]interface{})
 
 // Creates an endpoint instance
 func Endpoint(path string) endpoint {

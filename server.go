@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"mime/multipart"
 	"net/http"
+	"path"
+	"strings"
 )
 
 type RequestHandler func(w http.ResponseWriter, r *http.Request, md map[string]interface{})
@@ -30,7 +31,7 @@ y := x.(int)
 */
 func DynamicJSONBodyParser(body io.ReadCloser) (map[string]interface{}, error) {
 	var out map[string]interface{}
-	data, err := ioutil.ReadAll(body)
+	data, err := io.ReadAll(body)
 
 	if err != nil {
 		return nil, err
@@ -52,8 +53,22 @@ func Listen(port int) {
 }
 
 // Hosts a normal file bin
-func HostFolder(path string) {
-	http.Handle("/", http.FileServer(http.Dir(path)))
+func HostFolder(path string, folder string) {
+	http.Handle(path, http.FileServer(http.Dir(folder)))
+}
+
+// Hosts a SPA application with a built in router on history mode
+func HostSPA(folder string) {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		url := r.URL.Path
+
+		if url == "/" || strings.Contains(url, ".") {
+			http.FileServer(http.Dir(folder)).ServeHTTP(w, r)
+			return
+		}
+
+		http.ServeFile(w, r, path.Join(folder, "/index.html"))
+	})
 }
 
 /*
@@ -76,7 +91,7 @@ func GetFile(fieldname string, r *http.Request) ([]byte, *multipart.FileHeader, 
 	}
 	defer file.Close()
 
-	data, err := ioutil.ReadAll(file)
+	data, err := io.ReadAll(file)
 
 	if err != nil {
 		return nil, nil, err

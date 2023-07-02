@@ -97,35 +97,21 @@ ep.Create()
 ``` 
 ## Hosting
 ### Normal storage bin hosting
-To host a static storage bin website, all you need to do is call the `HostFolder` method with the path to the folder you want to host.
+To host a static storage bin website, all you need to do is call the `HostFolder` method with the path to the folder you want to host and the url path you want is hosted on.
 
-Example
+Example:
 ```go
-gover.HostFolder("public")
+gover.HostFolder("/","public")
 ```
 
 This method is just a wapper for the normal way of doing it in go.
 
 ### Signal Page Application Hosting.
-To Host a SPA (Signal Page Application) app, you need to call the `HostSPA` method with two arguments. 
+To Host a SPA (Signal Page Application) app, you need to call the `HostSPA` method with the folder path as the argument. 
 
-The first one is the `folder` argument. This argument is the path to the folder you want to host.
-
-The Second argument is the `limit` argument. This argument represent how deep do you allow your website's URLs to go, excluding the files.
-
-For example:
-
-`www.example.com/static/js/temp/` is a length of 3, because is goes 3 folders deep.
-
-`www.example.com/static/js/temp/old` is a length of 4, because is goes 4 folders deep.
-
-`www.example.com/static/js/temp/old/index.js` is still a length of 4, because the file at the end doesn't count.
-
-A smaller limit is better for performance.
-
-Code example
+Example:
 ```go
-gover.HostSPA("public",3)
+gover.HostSPA("public")
 ```
 This code will host a spa application and will only allow up 3 folders long URLs.
 ## Utilities
